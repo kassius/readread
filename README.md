@@ -2,7 +2,7 @@
 
 A Rapid Serial Visual Presentation PHP script, using ncurses, for quick reading.
 
-![terminator screenshot](screeshot-000.png)
+![terminator screenshot](screenshot-000.png)
 
 **IT IS NOT READY YET**
 
