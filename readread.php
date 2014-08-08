@@ -27,14 +27,25 @@ function calc_delay($word, $len, $wpm)
 	else return 0;
 }
 
-$wpm = 240;
+$shortopts  = "";
+$shortopts .= "w:";
+
+$longopts  = array(
+	"words-per-minute:",
+);
+
+$opts = getopt($shortopts, $longopts);
+
+if(isset($opts["w"])) { $wpm = $opts["w"]; }
+else if(isset($opts["words-per-minute"])) { $wpm = $opts["words-per-minute"]; }
+else { $wpm = 120; }
 
 ncurses_init();
 
 $screen = ncurses_newwin(0, 0, 0, 0);
 ncurses_wborder($screen, 0,0, 0,0, 0,0, 0,0);
 
-$file = file_get_contents("tea.txt");
+$file = file_get_contents("php://stdin");
 $file = str_ireplace("\n"," ",$file);
 $file = str_ireplace("\r","",$file);
 
