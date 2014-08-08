@@ -9,7 +9,7 @@ A Rapid Serial Visual Presentation PHP script, using ncurses, for quick reading.
 ## Installing on an Ubuntu 14.04:
 
 ```bash
-sudo apt-get install php5-cli php5-dev libncursesw5-dev
+sudo apt-get install php5-cli php5-dev libncursesw5-dev ncurses-dev
 
 sudo pecl install ncurses
 ```
