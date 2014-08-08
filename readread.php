@@ -13,7 +13,22 @@ function rhd($flt)
 {
 	return round($flt, 0, PHP_ROUND_HALF_DOWN);
 }
-	
+
+function calc_microsecs($wpm, $delay = 0)
+{
+	return ((60 / $wpm) * 1000000) + $delay ;
+}
+
+function calc_delay($word, $len, $wpm)
+{
+	/* Delay at the final dot, comma, words from 1 to 3 letters etc */
+	if($len <= 3) return 100000;
+	else if(strstr($word,".") !== FALSE) return 100000;
+	else return 0;
+}
+
+$wpm = 240;
+
 ncurses_init();
 
 $screen = ncurses_newwin(0, 0, 0, 0);
@@ -69,7 +84,8 @@ for($i=0; isset( $words[$i] ); $i++)
 	
 	ncurses_wrefresh($screen);
 
-	usleep(250000);
+	$delay = calc_delay($string, $length, $wpm);
+	usleep(calc_microsecs($wpm, $delay, $wpm));
 }
 
 ncurses_wgetch($screen);
