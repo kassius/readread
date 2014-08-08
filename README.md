@@ -8,7 +8,7 @@ A Rapid Serial Visual Presentation PHP script, using ncurses, for quick reading.
 
 ## Installing depedencies on an Ubuntu 14.04:
 
-```shell
+```bash
 sudo apt-get install php5-cli php5-dev libncursesw5-dev ncurses-dev
 
 sudo pecl install ncurses
@@ -20,7 +20,7 @@ extension=ncurses.so
 ```
 **IF THE METHOD ABOVE FAILS**, then maybe you can build and install the extension manually, this way
 
-```shell
+```bash
 mkdir php-ncurses
 cd php-ncurses
 pecl download ncurses #ignore the error
@@ -33,7 +33,7 @@ sudo make install
 
 ## Running the script
 
-```shell
+```bash
 chmod +x readread.php
 ./readread.php
 ```
