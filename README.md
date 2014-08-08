@@ -18,4 +18,23 @@ Add at the end of `/etc/php5/cli/php.ini`
 ```
 extension=ncurses.so
 ```
+**IF THE METHOD ABOVE FAILS**, then maybe you can build and install the extension manually, this way
+
+```
+mkdir php-ncurses
+cd php-ncurses
+pecl download ncurses #ignore the error
+tar zxvf ncurses-1.0.2.tgz
+cd ncurses-1.0.2/
+./configure
+make
+sudo make install
+```
+
+## Running
+
+```
+chmod +x readread.php
+./readread.php
+```
 
