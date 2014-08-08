@@ -8,7 +8,8 @@ A Rapid Serial Visual Presentation PHP script, using ncurses, for quick reading.
 
 ```
 sudo apt-get install php5-cli php5-dev libncursesw5-dev
-pecl install ncurses
+
+sudo pecl install ncurses
 ```
 Add at the end of `/etc/php5/cli/php.ini`
 
