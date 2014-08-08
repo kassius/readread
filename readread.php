@@ -8,6 +8,11 @@ function getORP($strlen)
 	if(($strlen) > 13) { return 4; }
 	else { return $orp[$strlen];  }
 }
+
+function rhd($flt)
+{
+	return round($flt, 0, PHP_ROUND_HALF_DOWN);
+}
 	
 ncurses_init();
 
@@ -29,6 +34,14 @@ if (ncurses_has_colors()) {
 	ncurses_wattron($screen, NCURSES_A_BOLD);
 }
 
+$middle = rhd($col/2);
+$erase = str_repeat(" ", $col-2);
+
+// orp marker
+ncurses_wcolor_set($screen,2);
+ncurses_mvwaddstr($screen, ($row / 2) -1 , $middle, "+");
+
+
 for($i=0; isset( $words[$i] ); $i++)
 {
 	if(strcmp(trim($words[$i]),"")===0) { continue; }
@@ -37,43 +50,23 @@ for($i=0; isset( $words[$i] ); $i++)
 
 	$length = strlen($string);
 	$shifting = getORP($length);
-	$space_left = str_repeat(" ", ((($col-4) - $length ) / 2) - $shifting);
-	$space_right = str_repeat(" ",((($col-4) - $length ) / 2) + $shifting);
-	// $string = $space_left . $string . $space_right;
-	$whole_string = $space_left . $string . $space_right;
 
 	$orp_char = $string[$shifting];
-	$left_piece = $space_left . substr($string, 0, $shifting-0);
-	$right_piece = substr($string, $shifting+1, $length-($shifting+1)) . $space_right;
 
-	$left_piece_len = strlen($left_piece);
-	$right_piece_len = strlen($right_piece);
-/*
- *  'I' shft = 0 , $orpchar = I, $lft, $right = "";
- *  'It' shft = 1, $orp = 't', $left = 'I', $rght = ""
- *  'Use' $shft = 1, $orp = 's', $left = 'U', $right = 'e';
- *
- *
- *
- *
- */
-
-	ncurses_wcolor_set($screen,2);
-	ncurses_mvwaddstr($screen, ($row / 2) - 1 , ($col / 2) - 1, "+");
-
-	// left space + begin of the string, before orp
-	$where_left = ($col / 2) - (strlen($whole_string) / 2); 
+	// erase line
 	ncurses_wcolor_set($screen,1);
-	ncurses_mvwaddstr($screen, $row / 2, $where_left, $left_piece);
+	ncurses_mvwaddstr($screen, $row / 2, 1, $erase);
+
+	// word
+	ncurses_wcolor_set($screen,1);
+	ncurses_mvwaddstr($screen, $row / 2, $middle - $shifting, $string);
 
 	// orp
 	ncurses_wcolor_set($screen,2);
-	ncurses_mvwaddstr($screen, ($row / 2), ($col / 2) - 1, $orp_char);
+	ncurses_mvwaddstr($screen, ($row / 2), $middle, $orp_char);
 
-	// end of the string + right space, after orp
-	ncurses_wcolor_set($screen,1);
-	ncurses_mvwaddstr($screen, $row / 2, ($where_left + $left_piece_len + 1), $right_piece);
-
+	ncurses_mvwaddstr($screen, $row-2 , $col-3, " ");
+	
 	ncurses_wrefresh($screen);
 
 	usleep(250000);
