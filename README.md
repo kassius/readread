@@ -6,21 +6,21 @@ A Rapid Serial Visual Presentation PHP script, using ncurses, for quick reading.
 
 **IT IS NOT READY YET**
 
-## Installing on an Ubuntu 14.04:
+## Installing depedencies on an Ubuntu 14.04:
 
-```bash
+```shell
 sudo apt-get install php5-cli php5-dev libncursesw5-dev ncurses-dev
 
 sudo pecl install ncurses
 ```
 Add at the end of `/etc/php5/cli/php.ini`
 
-```
+```php
 extension=ncurses.so
 ```
 **IF THE METHOD ABOVE FAILS**, then maybe you can build and install the extension manually, this way
 
-```bash
+```shell
 mkdir php-ncurses
 cd php-ncurses
 pecl download ncurses #ignore the error
@@ -31,9 +31,9 @@ make
 sudo make install
 ```
 
-## Running
+## Running the script
 
-```bash
+```shell
 chmod +x readread.php
 ./readread.php
 ```
