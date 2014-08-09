@@ -49,7 +49,7 @@ $opts = getopt($shortopts, $longopts);
 
 if(isset($opts["w"])) { $wpm = $opts["w"]; }
 else if(isset($opts["words-per-minute"])) { $wpm = $opts["words-per-minute"]; }
-else { $wpm = 120; }
+else { $wpm = 250; }
 
 if(isset($opts["b"])) { $bgcolor = 0; }
 else if(isset($opts["opaque"])) { $bgcolor = 0; }
@@ -64,7 +64,6 @@ $file = str_ireplace("\r","",$file);
 while(strstr($file, "  ") !== FALSE) $file = str_ireplace("  "," ",$file); 
 
 $words = explode(" ",$file);
-
 
 ncurses_init();
 
@@ -89,11 +88,8 @@ $erase = str_repeat(" ", $col-2);
 ncurses_wcolor_set($screen,2);
 ncurses_mvwaddstr($screen, ($row / 2) -1 , $middle, "+");
 
-
 for($i=0; isset( $words[$i] ); $i++)
 {
-//	if(strcmp(trim($words[$i]),"")===0) { continue; }
-
 	$string = (isset($opts['capitalize']) || isset($opts['c'])) ? strtoupper(trim($words[$i])) : trim($words[$i]);
 
 	$length = strlen($string);
