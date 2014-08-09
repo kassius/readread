@@ -2,7 +2,7 @@
 
 ## BARS AND DATA
 
-- [*] Status bar, showing word count and current word, percentage, speed (wpm) etc. (BELOW)
+- [x] Status bar, showing word count and current word, percentage, speed (wpm) etc. (BELOW)
 - [ ] Progress bar with percentage. (ABOVE STATUS BAR)
 - [ ] A bar (not showing for default) showing meaningless data. Like Timing in minutes, seconds, words per second etc. (OPPOSITE SITE OF STATUS BAR)
 - [ ] A bar showing the current of words, with the current word in the center, running like a "news slider". (ABOVE)
