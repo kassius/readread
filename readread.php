@@ -3,6 +3,8 @@
 
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
 
+stream_set_blocking(STDIN, false);
+
 function getORP($strlen)
 {
 	$orp = array(0,0,1,1,1,1,2,2,2,2,3,3,3,3);
@@ -32,6 +34,37 @@ function calc_delay($word, $len, $wpm)
 	else if(strstr($word,",") !== FALSE) return $delay_usecs;
 	else if(strstr($word,".") !== FALSE) return $delay_usecs;
 	else return 0;
+}
+
+function getch_nonblock($timeout)
+{
+	
+	$input = fopen("php://stdin", "r");
+	stream_set_blocking($input, false);
+	$key = fgetc($input);
+	fclose($input);
+	
+	return $key;
+}
+
+function myusleep($wpm, $delay)
+{
+	usleep(calc_microsecs($wpm, $delay));
+}
+
+function change_wpm($cur, $what)
+{
+	if ($what=="[" && $cur>10)
+	{
+		if($cur <= 100) { return $cur-10; }
+		if($cur > 100 ) { return $cur-50; }
+	}
+	else if ($what == "]" && $cur<5000)
+	{
+		if($cur < 100 ){ return $cur+10; }
+		if($cur >= 100) { return $cur+50; }
+	}
+	else return $cur;
 }
 
 $shortopts  = "";
@@ -83,12 +116,16 @@ if (ncurses_has_colors()) {
 }
 
 ncurses_curs_set(0);
+ncurses_noecho();
+
 $middle = rhd($col/2);
 $erase = str_repeat(" ", $col-2);
 
 // orp marker
 ncurses_wcolor_set($screen,2);
 ncurses_mvwaddstr($screen, ($row / 2) -1 , $middle, "+");
+
+$prog_char = "_";
 
 for($i=0; isset( $words[$i] ); $i++)
 {
@@ -112,7 +149,7 @@ for($i=0; isset( $words[$i] ); $i++)
 
 	$how_many_percent = rhd(($i / $words_count) * 100);
 	$progress = rhd(($i/$words_count)*($col-4));
-	$bar = str_repeat("-", $progress);
+	$bar = str_repeat($prog_char, $progress);
 	ncurses_wcolor_set($screen,1);
 	ncurses_mvwaddstr($screen, $row-4, 2, "{$bar}");
 
@@ -120,11 +157,23 @@ for($i=0; isset( $words[$i] ); $i++)
 	$j = $i+1;
 	ncurses_wcolor_set($screen,1);
 	ncurses_mvwaddstr($screen, $row-2, 1, " Words: {$j}/{$words_count} [{$how_many_percent}%] | W.P.M.: {$wpm}");
+	ncurses_mvwaddstr($screen, $row-2, $col-4, "{$last_key}");
 	
 	ncurses_wrefresh($screen);
+    
+	if($key = getch_nonblock(100))
+	{
+		if($key == NCURSES_KEY_F10) { ncurses_end(); exit(0); }
+		if($key == 'u' || $key ==NCURSES_KEY_RIGHT) { $last_key = "u"; $wpm = change_wpm($wpm, $key); }
+	}
+	else
+	{
+		$key = null;
+	}
+	ncurses_flushinp();
 
 	$delay = calc_delay($string, $length, $wpm);
-	usleep(calc_microsecs($wpm, $delay, $wpm));
+	myusleep($wpm, $delay, $wpm);
 }
 
 ncurses_wgetch($screen);
