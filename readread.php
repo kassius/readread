@@ -64,7 +64,7 @@ $file = str_ireplace("\r","",$file);
 while(strstr($file, "  ") !== FALSE) $file = str_ireplace("  "," ",$file); 
 
 $words = explode(" ",$file);
-
+$words_count = count($words);
 ncurses_init();
 
 $screen = ncurses_newwin(0, 0, 0, 0);
@@ -108,6 +108,10 @@ for($i=0; isset( $words[$i] ); $i++)
 	ncurses_wcolor_set($screen,2);
 	ncurses_mvwaddstr($screen, ($row / 2), $middle, $orp_char);
 
+	$how_many_percent = rhd(($i / $words_count) * 100);
+	ncurses_wcolor_set($screen,1);
+	ncurses_mvwaddstr($screen, $row-2, 1, " Words: {$i}/{$words_count} [{$how_many_percent}%] | W.P.M.: {$wpm}");
+	
 	ncurses_wrefresh($screen);
 
 	$delay = calc_delay($string, $length, $wpm);
