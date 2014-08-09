@@ -38,6 +38,12 @@ make
 sudo make install
 ```
 
+**AND** if you still didn't make it in the step before, add to your `/etc/php5/cli/php.ini`
+
+```php
+extension=ncurses.so
+```
+
 ## Running the script
 
 ```bash
@@ -59,6 +65,6 @@ cat tea.txt | ./readread.php --words-per-minute 250
 		Transform words to uppercase
 
 		-f,	--file	<file>
-		Reads text from file, intead of from STDIN (standard input)
+		Reads text from file, instead of from STDIN (standard input)
 
 ```
