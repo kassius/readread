@@ -47,7 +47,7 @@ cat tea.txt | ./readread.php --words-per-minute 250
 ## Options
 
 ```
-	./readread
+	./readread.php
 
 		-w,	--words-per-minute	<number>
 		Number of words that it shows per minute, approx.
