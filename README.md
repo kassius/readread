@@ -53,7 +53,7 @@ cat tea.txt | ./readread.php --words-per-minute 250
 		Number of words that it shows per minute, approx.
 
 		-b,	--opaque
-		If set, background will be opaque
+		If set, background will be opaque, and not show terminal transparency
 
 		-c,	--capitalize
 		Transform words to uppercase
