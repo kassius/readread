@@ -2,24 +2,24 @@
 
 ## BARS AND DATA
 
-* Status bar, showing word count and current word, percentage, speed (wpm) etc. (BELOW)
-* Progress bar with percentage. (ABOVE STATUS BAR)
-* A bar (not showing for default) showing meaningless data. Like Timing in minutes, seconds, words per second etc. (OPPOSITE SITE OF STATUS BAR)
-* A bar showing the current of words, with the current word in the center, running like a "news slider". (ABOVE)
+[ ] Status bar, showing word count and current word, percentage, speed (wpm) etc. (BELOW)
+[ ] Progress bar with percentage. (ABOVE STATUS BAR)
+[ ] A bar (not showing for default) showing meaningless data. Like Timing in minutes, seconds, words per second etc. (OPPOSITE SITE OF STATUS BAR)
+[ ] A bar showing the current of words, with the current word in the center, running like a "news slider". (ABOVE)
 
 ## COMMAND LINE OPTIONS (getopt())
 
-* set colors (g, fg, alert(default 'red'))
-* allow only ORP to be capitalized
-* change marker character (default '+')
+[ ] Set colors: BG, FG, Alert (default 'red')
+[ ] Allow only ORP to be capitalized
+[ ] Change ORP marker character (default '+')
 
-## KEYBOARD
+## KEYBOARD CONTROLS
 
-* faster/slower
-* hide/show bars
-* rewind some words
-* pause/play
+[ ] Faster/slower
+[ ] Hide/show bars
+[ ] Rewind some words
+[ ] Pause/play
 
 ## MISC
 
-* improve delay for some words (final dots, commas, small words etc)
+[ ] Improve delay for some words (final dots, commas, small words etc)
