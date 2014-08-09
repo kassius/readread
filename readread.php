@@ -39,10 +39,12 @@ function calc_delay($word, $len, $wpm)
 function getch_nonblock($timeout)
 {
 	
-	$input = fopen("php://stdin", "r");
-	stream_set_blocking($input, false);
-	$key = fgetc($input);
-	fclose($input);
+	//$input = fopen("php://stdin", "r");
+	//stream_set_blocking($input, false);
+	//fflush(STDIN);
+	$key = fgetc(STDIN);
+	//$key = ncurses_getch();
+	//fclose($input);
 	
 	return $key;
 }
@@ -92,7 +94,9 @@ else { $bgcolor = -1; }
 
 if(isset($opts["f"]) && file_exists($opts["f"])) { $file = file_get_contents($opts["f"]); }
 else if(isset($opts["file"]) && file_exists($opts["file"])) { $file = file_get_contents($opts["file"]); }
-else { $file = file_get_contents("php://stdin"); }
+else { $file = ""; while( $data = fgets(STDIN, 64000) ) { $file .= $data; } }
+
+//fclose(STDIN);
 
 $file = str_ireplace("\n"," ",$file);
 $file = str_ireplace("\r","",$file);
