@@ -112,7 +112,7 @@ for($i=0; isset( $words[$i] ); $i++)
 
 	$how_many_percent = rhd(($i / $words_count) * 100);
 	$progress = rhd(($i/$words_count)*($col-4));
-	$bar = str_repeat("-", $progress);
+	$bar = str_repeat("_", $progress);
 	ncurses_wcolor_set($screen,1);
 	ncurses_mvwaddstr($screen, $row-4, 2, "{$bar}");
 
