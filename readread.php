@@ -22,16 +22,27 @@ function calc_microsecs($wpm, $delay = 0)
 function calc_delay($word, $len, $wpm)
 {
 	/* Delay at the final dot, comma, words from 1 to 3 letters etc */
+
+	//$delay_factor = '50'; // percent delay 
+	//$delay_usecs = ( (calc_microsecs($wpm)/100) * $delay_factor );
+	
 	if($len <= 3) return 100000;
+	else if(strstr($word,",") !== FALSE) return 100000;
 	else if(strstr($word,".") !== FALSE) return 100000;
 	else return 0;
 }
 
 $shortopts  = "";
-$shortopts .= "w:";
+$shortopts .= "w:"; // words per sec
+$shortopts .= "b"; // opaque if set, or transparent if not
+$shortopts .= "c"; // capitalize
+$shortopts .= "f:"; // open file instead of stdin
 
 $longopts  = array(
 	"words-per-minute:",
+	"opaque",
+	"capitalize",
+	"file:",
 );
 
 $opts = getopt($shortopts, $longopts);
@@ -40,26 +51,37 @@ if(isset($opts["w"])) { $wpm = $opts["w"]; }
 else if(isset($opts["words-per-minute"])) { $wpm = $opts["words-per-minute"]; }
 else { $wpm = 120; }
 
+if(isset($opts["b"])) { $bgcolor = 0; }
+else if(isset($opts["opaque"])) { $bgcolor = 0; }
+else { $bgcolor = -1; }
+
+if(isset($opts["f"]) && file_exists($opts["f"])) { $file = file_get_contents($opts["f"]); }
+else if(isset($opts["file"]) && file_exists($opts["file"])) { $file = file_get_contents($opts["file"]); }
+else { $file = file_get_contents("php://stdin"); }
+
+$file = str_ireplace("\n"," ",$file);
+$file = str_ireplace("\r","",$file);
+while(strstr($file, "  ") !== FALSE) $file = str_ireplace("  "," ",$file); 
+
+$words = explode(" ",$file);
+
+
 ncurses_init();
 
 $screen = ncurses_newwin(0, 0, 0, 0);
 ncurses_wborder($screen, 0,0, 0,0, 0,0, 0,0);
 
-$file = file_get_contents("php://stdin");
-$file = str_ireplace("\n"," ",$file);
-$file = str_ireplace("\r","",$file);
-
-$words = explode(" ",$file);
-
 ncurses_getmaxyx($screen, $row, $col); // put inside the loop, later
 
 if (ncurses_has_colors()) {
 	ncurses_start_color();
-	ncurses_init_pair(1, NCURSES_COLOR_WHITE, 0);
-	ncurses_init_pair(2, NCURSES_COLOR_RED, 0);
+	ncurses_assume_default_colors(NCURSES_COLOR_WHITE, $bgcolor);
+	ncurses_init_pair(1, NCURSES_COLOR_WHITE, $bgcolor);
+	ncurses_init_pair(2, NCURSES_COLOR_RED, $bgcolor);
 	ncurses_wattron($screen, NCURSES_A_BOLD);
 }
 
+ncurses_curs_set(0);
 $middle = rhd($col/2);
 $erase = str_repeat(" ", $col-2);
 
@@ -70,9 +92,9 @@ ncurses_mvwaddstr($screen, ($row / 2) -1 , $middle, "+");
 
 for($i=0; isset( $words[$i] ); $i++)
 {
-	if(strcmp(trim($words[$i]),"")===0) { continue; }
+//	if(strcmp(trim($words[$i]),"")===0) { continue; }
 
-	$string = trim($words[$i]);
+	$string = (isset($opts['capitalize']) || isset($opts['c'])) ? strtoupper(trim($words[$i])) : trim($words[$i]);
 
 	$length = strlen($string);
 	$shifting = getORP($length);
@@ -80,7 +102,6 @@ for($i=0; isset( $words[$i] ); $i++)
 	$orp_char = $string[$shifting];
 
 	// erase line
-	ncurses_wcolor_set($screen,1);
 	ncurses_mvwaddstr($screen, $row / 2, 1, $erase);
 
 	// word
@@ -91,8 +112,6 @@ for($i=0; isset( $words[$i] ); $i++)
 	ncurses_wcolor_set($screen,2);
 	ncurses_mvwaddstr($screen, ($row / 2), $middle, $orp_char);
 
-	ncurses_mvwaddstr($screen, $row-2 , $col-3, " ");
-	
 	ncurses_wrefresh($screen);
 
 	$delay = calc_delay($string, $length, $wpm);

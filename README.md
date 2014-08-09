@@ -44,4 +44,21 @@ sudo make install
 chmod +x readread.php # make sure file is executable
 cat tea.txt | ./readread.php --words-per-minute 250
 ```
+## Options
 
+```
+	./readread
+
+		-w,	--words-per-minute	<number>
+		Number of words that it shows per minute, approx.
+
+		-b,	--opaque
+		If set, background will be opaque
+
+		-c,	--capitalize
+		Transform words to uppercase
+
+		-f,	--file	<file>
+		Reads text from file, intead of from STDIN (standard input)
+
+```
