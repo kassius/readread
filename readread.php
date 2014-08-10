@@ -79,12 +79,14 @@ $shortopts .= "w:"; // words per sec
 $shortopts .= "b"; // opaque if set, or transparent if not
 $shortopts .= "c"; // capitalize
 $shortopts .= "f:"; // open file instead of stdin
+$shortopts .= "p:"; // start from word num
 
 $longopts  = array(
 	"words-per-minute:",
 	"opaque",
 	"capitalize",
 	"file:",
+	"position:",
 );
 
 $opts = getopt($shortopts, $longopts);
@@ -93,13 +95,19 @@ if(isset($opts["w"])) { $wpm = $opts["w"]; }
 else if(isset($opts["words-per-minute"])) { $wpm = $opts["words-per-minute"]; }
 else { $wpm = 250; }
 
-if(isset($opts["b"])) { $bgcolor = 0; }
-else if(isset($opts["opaque"])) { $bgcolor = 0; }
+if(isset($opts["b"]) || isset($opts["opaque"])) { $bgcolor = 0; }
 else { $bgcolor = -1; }
+
+if(isset($opts['capitalize']) || isset($opts['c'])) { $capitalize = true; }
+else { $capitalize = false; }
 
 if(isset($opts["f"]) && file_exists($opts["f"])) { $file = file_get_contents($opts["f"]); }
 else if(isset($opts["file"]) && file_exists($opts["file"])) { $file = file_get_contents($opts["file"]); }
 else { $file = ""; while( $data = fgets(STDIN, 64000) ) { $file .= $data; } }
+
+if(isset($opts["p"])) { $starting_word = $opts["p"];}
+else if(isset($opts["position"])) { $starting_word = $opts["position"]; }
+else { $starting_word = 0; }
 
 $file = str_ireplace("\n"," ",$file);
 $file = str_ireplace("\r","",$file);
@@ -135,9 +143,9 @@ ncurses_mvwaddstr($screen, ($row / 2) -1 , $middle, "+");
 $prog_char = "_";
 $ref_tax = "50000";
 
-for($i=0; isset( $words[$i] ); $i++)
+for($i = $starting_word; isset( $words[$i] ); $i++)
 {
-	$string = (isset($opts['capitalize']) || isset($opts['c'])) ? strtoupper(trim($words[$i])) : trim($words[$i]);
+	$string = ($capitalize) ? strtoupper(trim($words[$i])) : trim($words[$i]);
 
 	$length = strlen($string);
 	$shifting = getORP($length);
@@ -180,16 +188,19 @@ for($i=0; isset( $words[$i] ); $i++)
 
 		if($key = getch_nonblock($keyboard))
 		{
-			if($key == NCURSES_KEY_F10) { ncurses_end(); exit(0); }
-			if($key == '[' || $key == ']') { $wpm = change_wpm($wpm, $key); }
-			if($key == 'r') { $i = ($i-11 < 0 ? 0 : $i-11); }
+			if($key == 'q') { ncurses_end(); echo "You were reading word no. {$i} from {$words_count} words ($how_many_percent% of the text) at a rhythm of {$wpm} words per minute.\n\n"; exit(0); }
+			if($key == '[' || $key == ']') { $wpm = change_wpm($wpm, $key); $time = calc_microsecs($wpm, $delay); $i = ($i-1 < 0 ? 0 : $i-1); continue 2; }
+			if($key == 'r') { $i = ($i-11 < 0 ? 0 : $i-11); continue 2; }
+			if($key == 'c') { $capitalize = ($capitalize ? false : true); $i = ($i-1 < 0 ? 0 : $i-1); continue 2; }
+			if($key == 'p') { $paused = ($paused ? false : true); }
+			ncurses_flushinp();
 		}
 		else
 		{
 			$key = null;
 		}
-		ncurses_flushinp();
-	 
+		
+		if($paused) { while('p' !== getch_nonblock($keyboard)) { usleep($ref_tax); } $paused = ($paused ? false : true); }
 		usleep($ref_tax);
 	}
 }
