@@ -18,7 +18,7 @@
 
 - [x] Faster/slower (keys '[' and ']')
 - [x] Hide/show bars (key 's')
-- [x] Rewind some words (key 'r')
+- [x] Rewind some words (key 'r') **Forward also now!!**
 - [x] Pause/play (key 'p')
 - [x] Toggle BG/FG/Marker pairs (Themes)
 - [ ] Help window + toggle (key 'h')

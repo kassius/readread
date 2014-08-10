@@ -12,11 +12,11 @@ A Rapid Serial Visual Presentation script written in PHP using ncurses, for quic
 * Progress bar and progress count
 * Fits to terminal as it uses ncurses library
 * Speed of text can be controlled either by command line or keyboard on the fly (keys '**[**' and '**]**')
-* Rewind  or forward text (key '**r**')
+* Rewind or forward text (key '**r**' or **f**)
 * Change case of text to upper case or lower case (key '**c**')
-* Start from position (word number n. *--position [n]*)
+* Start from position (word number n. **--position** *[n]*)
 * Status bar text can be easily customizable.
-* Change ORP marker character (*--marker [char]*) from default '+'
+* Change ORP marker character (**--marker** *[char]*) from default '+'
 
 Being developed using Geany - running from Geany's embedded terminal
 
