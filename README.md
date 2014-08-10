@@ -105,7 +105,7 @@ cat tea.txt | ./readread.php --words-per-minute 250
         -p,	--position <word no. #>
         Start reading from word number #.
         
-        -m, --marker
+        -m, --marker <character marker>
         Changes marker character from default '+'
 
         -h, --help

@@ -268,7 +268,7 @@ READREAD - quick reading
         -s, --status
         Hides status bar and progress bar
         
-        -m, --marker
+        -m, --marker <character marker>
         Changes marker character from default '+'
 		
     KEYBOARD SHORTCUTS
