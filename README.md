@@ -4,13 +4,13 @@ A Rapid Serial Visual Presentation PHP script, using ncurses, for quick reading.
 
 ![Terminator screenshot](screenshot-000.png)
 
-Being developed using Geany
+Being developed using Geany - runing from Geany's embedded terminal
 
 ![Geany screenshot](screenshot-001.png)
 
 ### Themes
 
-#### Theme 'default' - transparency
+#### Theme 'default' - allow transparency
 
 ![screenshot](screenshot-002.png)
 
