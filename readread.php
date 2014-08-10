@@ -225,6 +225,7 @@ for($i = $starting_word; isset( $words[$i] ); $i++)
 			if($key == 'q') { ncurses_end(); echo "You were reading word no. {$i} from {$words_count} words ($how_many_percent% of the text) at a rhythm of {$wpm} words per minute.\n\n"; exit(0); }
 			if($key == '[' || $key == ']') { $wpm = change_wpm($wpm, $key); $delay = calc_delay($string, $length, $wpm); $time = calc_microsecs($wpm, $delay); $i = ($i-1 < 0 ? 0 : $i-1); continue 2; }
 			if($key == 'r') { $i = ($i-11 < 0 ? 0 : $i-11); continue 2; }
+			if($key == 'f') { $i = ($i+10 > $words_count ? $words_count : $i+10); continue 2; }
 			if($key == 'c') { $capitalize = ($capitalize ? false : true); $i = ($i-1 < 0 ? 0 : $i-1); continue 2; }
 			if($key == 't') { $theme = next_theme($theme, $themes, $screen); }
 			if($key == 'p') { $paused = ($paused ? false : true); }
@@ -283,6 +284,9 @@ READREAD - quick reading
 
     r
         Rewind the text by ~ 10 words.
+        
+    f
+        Forward the text by ~ 10 words.
 
     t
         Change theme to the next avaliable.
