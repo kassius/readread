@@ -51,7 +51,7 @@ function calc_delay($word, $len, $wpm)
 {
 	/* Delay at the final dot, comma, words from 1 to 3 letters etc */
 
-	$delay_factor = '20'; // percent delay to add to current speed for these words
+	$delay_factor = '10'; // percent delay to add to current speed for these words
 	$delay_usecs = ( (calc_microsecs($wpm)/100) * $delay_factor );
 	
 	if($len <= 3) return $delay_usecs;
@@ -169,7 +169,7 @@ $middle = floor($col/2);
 $erase = str_repeat(" ", $col-2);
 
 $prog_char = "_";
-$ref_tax = "50000";
+$ref_tax = "1000";
 
 // orp marker
 ncurses_wcolor_set($screen,2);
@@ -223,7 +223,7 @@ for($i = $starting_word; isset( $words[$i] ); $i++)
 		if($key = getch_nonblock($keyboard))
 		{
 			/* maybe use switch() */
-			if($key == 'q') { ncurses_end(); echo "You were reading word no. {$i} from {$words_count} words ($how_many_percent% of the text) at a rhythm of {$wpm} words per minute.\n\n"; exit(0); }
+			if($key == 'q') { ncurses_end(); /* $end_time = time(); */ echo "You were reading word no. {$i} from {$words_count} words ($how_many_percent% of the text) at a rhythm of {$wpm} words per minute.\n\n"; exit(0); }
 			if($key == '[' || $key == ']') { $wpm = change_wpm($wpm, $key); $delay = calc_delay($string, $length, $wpm); $time = calc_microsecs($wpm, $delay); $i = ($i-1 < 0 ? 0 : $i-1); continue 2; }
 			if($key == 'r') { $i = ($i-11 < 0 ? 0 : $i-11); continue 2; }
 			if($key == 'f') { $i = ($i+10 > $words_count ? $words_count : $i+10); continue 2; }
@@ -239,6 +239,8 @@ for($i = $starting_word; isset( $words[$i] ); $i++)
 		usleep($ref_tax);
 	}
 }
+
+/* $end_time = time(); */
 
 fclose($keyboard);
 ncurses_end();
