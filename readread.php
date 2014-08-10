@@ -11,6 +11,8 @@ $themes = array(
 	"light" => array( "fg" => NCURSES_COLOR_BLACK,  "bg" => NCURSES_COLOR_WHITE, "mk"=> NCURSES_COLOR_RED ),
 	"opaque" => array( "fg" => NCURSES_COLOR_WHITE,  "bg" => NCURSES_COLOR_BLACK, "mk"=> NCURSES_COLOR_RED ),
 );
+function status_text($cur, $tot, $perc, $wpm) {
+  return  "Word is no. {$cur} of {$tot} words, {$perc}% of the text, {$wpm} words per minute."; }
 
 function next_theme($theme, $themes, $screen)
 {
@@ -127,7 +129,7 @@ if(isset($opts["p"])) { $starting_word = $opts["p"];}
 else if(isset($opts["position"])) { $starting_word = $opts["position"]; }
 else { $starting_word = 0; }
 
-if(isset($opts['status']) || isset($opts['s'])) { $status = false; }
+if(isset($opts['s']) || isset($opts['status'])) { $status = false; }
 else { $status = true; }
 
 $file = str_ireplace("\n"," ",$file);
@@ -202,7 +204,7 @@ for($i = $starting_word; isset( $words[$i] ); $i++)
 		$j = $i+1;
 		ncurses_wcolor_set($screen,1);
 		ncurses_mvwaddstr($screen, $row-2, 1, $erase);
-		ncurses_mvwaddstr($screen, $row-2, 1, " Word is no. {$j} of {$words_count} words, {$how_many_percent}% of the text. {$wpm} words per minute.");
+		ncurses_mvwaddstr($screen, $row-2, 2, status_text($j,$words_count,$how_many_percent,$wpm));
 	}
 	
 	ncurses_wrefresh($screen);

@@ -1,8 +1,21 @@
 # READREAD
 
-A Rapid Serial Visual Presentation PHP script, using ncurses, for quick reading.
+A Rapid Serial Visual Presentation script written in PHP using ncurses, for quick reading.
 
 ![Terminator screenshot](screenshots/screenshot-000.png)
+
+## Features
+
+* Run from terminal
+* Can read from file or stdin (pipe)
+* Themes - see screenshots
+* Progress bar and progress count
+* Fits to terminal as it uses ncurses library
+* Speed of text can be controlled either by command line or keyboard on the fly (keys **[** and **[**)
+* Rewind text (key **r**)
+* Change case of text to upper case or lower case (key **c**)
+* Start from position (word number n. *./readread.php --position <n>*)
+* Status bar text can be easily customizable.
 
 Being developed using Geany - running from Geany's embedded terminal
 
@@ -80,11 +93,19 @@ cat tea.txt | ./readread.php --words-per-minute 250
 		Use to choose the theme! current themes are: default, light and opaque.
 
 		-c,	--capitalize
-		Transform words to uppercase
+		Transform words to uppercase (toggle 'c' key)
 
 		-f,	--file	<file>
 		Reads text from file, instead of from STDIN (standard input)
+		
+        -s,	--status
+        Status and progress bar disabled by default. (toggle with 's' key)
+        
+        -p,	--position <word no. #>
+        Start reading from word number #.
 
+        -h, --help
+        Show help and exit
 ```
 
 ### Keyboard shortcuts
@@ -106,6 +127,7 @@ cat tea.txt | ./readread.php --words-per-minute 250
 
 	p
 		Toggle between play / pause.
+
 	s
 		Toggle status bar on/off
 
