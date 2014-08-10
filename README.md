@@ -47,7 +47,6 @@ For installing PHP CLI and building the extension, follow these steps (Ubuntu 14
 
 ```bash
 sudo apt-get install php5-cli php5-dev libncursesw5-dev ncurses-dev
-
 sudo pecl install ncurses
 ```
 Add at the end of `/etc/php5/cli/php.ini`
