@@ -11,8 +11,8 @@
 
 - [x] ~~Set colors: BG, FG, Alert (default 'red')~~ **choose between themes instead**
 - [ ] ~~Allow only ORP to be capitalized~~
-- [ ] Change ORP marker character (default '+')
-- [x] Do not show any bars, ~~or show just some (silent, normal, extended, crazy)~~ ** or show all**
+- [x] Change ORP marker character (default '+')
+- [x] Do not show any bars, ~~or show just some (silent, normal, extended, crazy)~~ **or show all**
 
 ## KEYBOARD CONTROLS
 
@@ -21,7 +21,7 @@
 - [x] Rewind some words (key 'r')
 - [x] Pause/play (key 'p')
 - [x] Toggle BG/FG/Marker pairs (Themes)
-- [ ] Help (key 'h')
+- [ ] Help window + toggle (key 'h')
 
 ## MISC
 
