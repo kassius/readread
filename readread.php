@@ -40,11 +40,6 @@ function getORP($strlen)
 	else { return $orp[$strlen];  }
 }
 
-function rhd($flt)
-{
-	return round($flt, 0, PHP_ROUND_HALF_DOWN);
-}
-
 function calc_microsecs($wpm, $delay = 0)
 {
 	return ((60 / $wpm) * 1000000) + $delay ;
@@ -54,7 +49,7 @@ function calc_delay($word, $len, $wpm)
 {
 	/* Delay at the final dot, comma, words from 1 to 3 letters etc */
 
-	$delay_factor = '50'; // percent delay to add to current speed for these words
+	$delay_factor = '20'; // percent delay to add to current speed for these words
 	$delay_usecs = ( (calc_microsecs($wpm)/100) * $delay_factor );
 	
 	if($len <= 3) return $delay_usecs;
@@ -71,18 +66,6 @@ function getch_nonblock($keyboard)
 {
 	$key = fgetc($keyboard);
 	return $key;
-}
-
-function myusleep($wpm, $delay, $keyboard)
-{
-	$tax = 10000;
-
-	for($i=0; ($i*$tax) < calc_microsecs($wpm, $delay); $i++)
-	{
-		usleep($tax);
-	}
-
-	usleep(calc_microsecs($wpm, $delay));
 }
 
 function change_wpm($cur, $what)
@@ -106,17 +89,25 @@ $shortopts .= "t:"; // theme
 $shortopts .= "c"; // capitalize
 $shortopts .= "f:"; // open file instead of stdin
 $shortopts .= "p:"; // start from word num
+$shortopts .= "s"; // hide status bars
+$shortopts .= "h"; // hide status bars
 
 $longopts  = array(
 	"words-per-minute:",
-	"theme",
+	"theme:",
 	"capitalize",
 	"file:",
 	"position:",
+	"status",
+	"help",
 );
 
 $opts = getopt($shortopts, $longopts);
 
+// show help
+if(isset($opts['help']) || isset($opts['h'])) { show_help(); }
+
+// else
 if(isset($opts["w"])) { $wpm = $opts["w"]; }
 else if(isset($opts["words-per-minute"])) { $wpm = $opts["words-per-minute"]; }
 else { $wpm = 250; }
@@ -136,14 +127,20 @@ if(isset($opts["p"])) { $starting_word = $opts["p"];}
 else if(isset($opts["position"])) { $starting_word = $opts["position"]; }
 else { $starting_word = 0; }
 
+if(isset($opts['status']) || isset($opts['s'])) { $status = false; }
+else { $status = true; }
+
 $file = str_ireplace("\n"," ",$file);
 $file = str_ireplace("\r","",$file);
 while(strstr($file, "  ") !== FALSE) $file = str_ireplace("  "," ",$file); 
 
-$words = explode(" ",$file);
+$words = explode(" ", trim($file));
 $words_count = count($words);
 
 ncurses_init();
+
+ncurses_curs_set(0);
+ncurses_noecho();
 
 if (ncurses_has_colors()) {
 	ncurses_start_color();
@@ -154,34 +151,22 @@ if (ncurses_has_colors()) {
 
 $screen = ncurses_newwin(0, 0, 0, 0);
 ncurses_wborder($screen, 0,0, 0,0, 0,0, 0,0);
-
 ncurses_getmaxyx($screen, $row, $col); // put inside the loop, later
 
 if (ncurses_has_colors()) {
 	ncurses_wattron($screen, NCURSES_A_BOLD);
 }
 
-
-/*if (ncurses_has_colors()) {
-	ncurses_start_color();
-	ncurses_assume_default_colors(NCURSES_COLOR_WHITE, $bgcolor);
-	ncurses_init_pair(1, NCURSES_COLOR_WHITE, $bgcolor);
-	ncurses_init_pair(2, NCURSES_COLOR_RED, $bgcolor);
-	ncurses_wattron($screen, NCURSES_A_BOLD);
-}*/
-
-ncurses_curs_set(0);
-ncurses_noecho();
-
-$middle = rhd($col/2);
+$middle = floor($col/2);
 $erase = str_repeat(" ", $col-2);
+
+$prog_char = "_";
+$opr_char = "+";
+$ref_tax = "50000";
 
 // orp marker
 ncurses_wcolor_set($screen,2);
-ncurses_mvwaddstr($screen, ($row / 2) -1 , $middle, "+");
-
-$prog_char = "_";
-$ref_tax = "50000";
+ncurses_mvwaddstr($screen, ($row / 2) -1 , $middle, $opr_char);
 
 for($i = $starting_word; isset( $words[$i] ); $i++)
 {
@@ -192,30 +177,33 @@ for($i = $starting_word; isset( $words[$i] ); $i++)
 
 	$orp_char = $string[$shifting];
 
-	// erase line
+	// erase word line
+	ncurses_wcolor_set($screen,1);
 	ncurses_mvwaddstr($screen, $row / 2, 1, $erase);
 
 	// word
-	ncurses_wcolor_set($screen,1);
 	ncurses_mvwaddstr($screen, $row / 2, $middle - $shifting, $string);
 
 	// orp
 	ncurses_wcolor_set($screen,2);
 	ncurses_mvwaddstr($screen, ($row / 2), $middle, $orp_char);
 
-	$how_many_percent = rhd(($i / $words_count) * 100);
-	$progress = rhd(($i/$words_count)*($col-4));
-	$bar = str_repeat($prog_char, $progress);
-	
-	ncurses_wcolor_set($screen,1);
-	ncurses_mvwaddstr($screen, $row-4, 1, $erase);
-	ncurses_mvwaddstr($screen, $row-4, 2, "{$bar}");
+	if($status){
+		$how_many_percent = floor(($i / $words_count) * 100);
+		$progress = floor(($i/$words_count)*($col-4));
+		$bar = str_repeat($prog_char, $progress);
 
-	$j = $i+1;
-	ncurses_wcolor_set($screen,1);
-	ncurses_mvwaddstr($screen, $row-2, 1, $erase);
-	ncurses_mvwaddstr($screen, $row-2, 1, " Words: {$j}/{$words_count} [{$how_many_percent}%] | W.P.M.: {$wpm}");
-	ncurses_mvwaddstr($screen, $row-2, $col-4, "{$last_key}");
+		// progress bar
+		ncurses_wcolor_set($screen,1);
+		ncurses_mvwaddstr($screen, $row-4, 1, $erase);
+		ncurses_mvwaddstr($screen, $row-4, 2, "{$bar}");
+
+		// status bar
+		$j = $i+1;
+		ncurses_wcolor_set($screen,1);
+		ncurses_mvwaddstr($screen, $row-2, 1, $erase);
+		ncurses_mvwaddstr($screen, $row-2, 1, " Words: {$j}/{$words_count} [{$how_many_percent}%] | W.P.M.: {$wpm}");
+	}
 	
 	ncurses_wrefresh($screen);
 
@@ -224,31 +212,103 @@ for($i = $starting_word; isset( $words[$i] ); $i++)
 
 	for($k=0; ($k*$ref_tax) < $time; $k++)
 	{
-		$delay = calc_delay($string, $length, $wpm);
-		$time = calc_microsecs($wpm, $delay);
-
 		if($key = getch_nonblock($keyboard))
 		{
+			/* maybe use switch() */
 			if($key == 'q') { ncurses_end(); echo "You were reading word no. {$i} from {$words_count} words ($how_many_percent% of the text) at a rhythm of {$wpm} words per minute.\n\n"; exit(0); }
-			if($key == '[' || $key == ']') { $wpm = change_wpm($wpm, $key); $time = calc_microsecs($wpm, $delay); $i = ($i-1 < 0 ? 0 : $i-1); continue 2; }
+			if($key == '[' || $key == ']') { $wpm = change_wpm($wpm, $key); $delay = calc_delay($string, $length, $wpm); $time = calc_microsecs($wpm, $delay); $i = ($i-1 < 0 ? 0 : $i-1); continue 2; }
 			if($key == 'r') { $i = ($i-11 < 0 ? 0 : $i-11); continue 2; }
 			if($key == 'c') { $capitalize = ($capitalize ? false : true); $i = ($i-1 < 0 ? 0 : $i-1); continue 2; }
 			if($key == 't') { $theme = next_theme($theme, $themes, $screen); }
 			if($key == 'p') { $paused = ($paused ? false : true); }
-			ncurses_flushinp();
-			$key = null;
+			if($key == 's') { $status = ($status ? false : true); ncurses_mvwaddstr($screen, $row-4, 1, $erase); ncurses_mvwaddstr($screen, $row-2, 1, $erase); }
 		}
-		else
-		{
-			$key = null;
-		}
+
+		$key = false;
 		
-		if($paused) { while('p' !== getch_nonblock($keyboard)) { $i = ($i-1 < 0 ? $i : $i-1); continue 3; /* this flushes for other commands while paused */ } $paused = ($paused ? false : true); }
+		//if($paused) { while('p' !== getch_nonblock($keyboard)) { $i = ($i-1 < 0 ? $i : $i-1); continue 3; /* this flushes for other commands while paused */ } $paused = ($paused ? false : true); }
+		while($paused) { $i = ($i-1 < 0 ? 0 : $i-1); continue 3; /* this flushes for other commands while paused */ }
 		usleep($ref_tax);
 	}
 }
 
 fclose($keyboard);
 ncurses_end();
+
+function show_help()
+{
+	$help = <<<EOT
+READREAD - quick reading
+
+    USAGE:
+	
+    ./readread.php
+
+        -h,	--help
+        Show help and exit.
+
+        -w,	--words-per-minute	<number>
+        Number of words that it shows per minute, approx.
+
+        -t,	--theme		<theme>
+        Use to choose the theme! current themes are: default, light and opaque.
+
+        -c,	--capitalize
+        Transform words to uppercase
+
+        -f,	--file	<file>
+        Reads text from file, instead of from STDIN (standard input)
+
+        -s, --status
+        Hides status bar and progress bar
+		
+    KEYBOARD SHORTCUTS
+	
+    These are the keyboard shortcuts currently avaliable.
+
+    '[' and ']'
+        Change how many words per minute are running.
+
+    c
+        Toggle between upper case / lower case.
+
+    r
+        Rewind the text by ~ 10 words.
+
+    t
+        Change theme to the next avaliable.
+
+    p
+        Toggle between play / pause.
+
+    s
+        Toggle status bar on/off
+
+    q
+        Quit.
+		
+    USAGE EXAMPLE
+	
+    Running the script directly
+
+        ./readread.php -f tea.txt
+
+    or
+
+        ./readread.php --file tea.txt
+
+   Running via pipe
+
+        cat tea.txt | ./readread.php
+
+   or
+
+        ./readread.php < tea.txt
+EOT;
+
+echo "{$help}\n\n";
+
+exit(0);
+}
 
 ?>

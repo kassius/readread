@@ -77,7 +77,7 @@ cat tea.txt | ./readread.php --words-per-minute 250
 		Number of words that it shows per minute, approx.
 
 		-t,	--theme		<theme>
-		Use to choose the theme! current themes are: **default**, **light** and **opaque**.
+		Use to choose the theme! current themes are: default, light and opaque.
 
 		-c,	--capitalize
 		Transform words to uppercase
@@ -106,6 +106,8 @@ cat tea.txt | ./readread.php --words-per-minute 250
 
 	p
 		Toggle between play / pause.
+	s
+		Toggle status bar on/off
 
 	q
 		Quit.
