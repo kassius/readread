@@ -16,12 +16,12 @@
 
 ## KEYBOARD CONTROLS
 
-- [ ] Faster/slower
+- [x] Faster/slower (keys '[' and ']')
 - [ ] Hide/show bars
-- [ ] Rewind some words
+- [x] Rewind some words (key 'r')
 - [ ] Pause/play
 
 ## MISC
 
 - [x] Improve delay for some words (final dots, commas, small words etc)
-- [ ] Improve for semicolons, colons etc
+- [x] Improve for semicolons, colons etc

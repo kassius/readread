@@ -28,12 +28,16 @@ function calc_delay($word, $len, $wpm)
 {
 	/* Delay at the final dot, comma, words from 1 to 3 letters etc */
 
-	$delay_factor = '50'; // percent delay 
+	$delay_factor = '50'; // percent delay to add to current speed for these words
 	$delay_usecs = ( (calc_microsecs($wpm)/100) * $delay_factor );
 	
 	if($len <= 3) return $delay_usecs;
 	else if(strstr($word,",") !== FALSE) return $delay_usecs;
 	else if(strstr($word,".") !== FALSE) return $delay_usecs;
+	else if(strstr($word,":") !== FALSE) return $delay_usecs;
+	else if(strstr($word,";") !== FALSE) return $delay_usecs;
+	else if(strstr($word,"!") !== FALSE) return $delay_usecs;
+	else if(strstr($word,"?") !== FALSE) return $delay_usecs;
 	else return 0;
 }
 
@@ -62,7 +66,7 @@ function change_wpm($cur, $what)
 		if($cur <= 100) { return $cur-10; }
 		if($cur > 100 ) { return $cur-50; }
 	}
-	else if ($what == "]" && $cur<5000)
+	else if ($what == "]" && $cur<20000)
 	{
 		if($cur < 100 ){ return $cur+10; }
 		if($cur >= 100) { return $cur+50; }
@@ -158,9 +162,9 @@ for($i=0; isset( $words[$i] ); $i++)
 	ncurses_mvwaddstr($screen, $row-4, 1, $erase);
 	ncurses_mvwaddstr($screen, $row-4, 2, "{$bar}");
 
-	//$how_many_percent = rhd(($i / $words_count) * 100);
 	$j = $i+1;
 	ncurses_wcolor_set($screen,1);
+	ncurses_mvwaddstr($screen, $row-2, 1, $erase);
 	ncurses_mvwaddstr($screen, $row-2, 1, " Words: {$j}/{$words_count} [{$how_many_percent}%] | W.P.M.: {$wpm}");
 	ncurses_mvwaddstr($screen, $row-2, $col-4, "{$last_key}");
 	
