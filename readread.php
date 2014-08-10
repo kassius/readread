@@ -202,7 +202,7 @@ for($i = $starting_word; isset( $words[$i] ); $i++)
 		$j = $i+1;
 		ncurses_wcolor_set($screen,1);
 		ncurses_mvwaddstr($screen, $row-2, 1, $erase);
-		ncurses_mvwaddstr($screen, $row-2, 1, " Words: {$j}/{$words_count} [{$how_many_percent}%] | W.P.M.: {$wpm}");
+		ncurses_mvwaddstr($screen, $row-2, 1, " Word is no. {$j} of {$words_count} words, {$how_many_percent}% of the text. {$wpm} words per minute.");
 	}
 	
 	ncurses_wrefresh($screen);
@@ -226,7 +226,6 @@ for($i = $starting_word; isset( $words[$i] ); $i++)
 
 		$key = false;
 		
-		//if($paused) { while('p' !== getch_nonblock($keyboard)) { $i = ($i-1 < 0 ? $i : $i-1); continue 3; /* this flushes for other commands while paused */ } $paused = ($paused ? false : true); }
 		while($paused) { $i = ($i-1 < 0 ? 0 : $i-1); continue 3; /* this flushes for other commands while paused */ }
 		usleep($ref_tax);
 	}
