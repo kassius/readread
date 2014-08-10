@@ -19,8 +19,8 @@
 - [x] Faster/slower (keys '[' and ']')
 - [ ] Hide/show bars
 - [x] Rewind some words (key 'r')
-- [ ] Pause/play
-
+- [x] Pause/play
+- [ ] Toggle BG/FG/Marker pairs (Themes)
 ## MISC
 
 - [x] Improve delay for some words (final dots, commas, small words etc)

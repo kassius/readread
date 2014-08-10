@@ -2,7 +2,11 @@
 
 A Rapid Serial Visual Presentation PHP script, using ncurses, for quick reading.
 
-![terminator screenshot](screenshot-000.png)
+![Terminator screenshot](screenshot-000.png)
+
+Being developed using Geany
+
+![Geany screenshot](screenshot-001.png)
 
 ## Installing depedencies on an Ubuntu 14.04:
 
