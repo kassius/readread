@@ -8,6 +8,20 @@ Being developed using Geany
 
 ![Geany screenshot](screenshot-001.png)
 
+### Themes
+
+#### Theme 'default' - transparency
+
+![screenshot](screenshot-002.png)
+
+#### Theme 'light'
+
+![screenshot](screenshot-003.png)
+
+#### Theme 'opaque'
+
+![screenshot](screenshot-004.png)
+
 ## Installing depedencies on an Ubuntu 14.04:
 
 In order to run the script you need:
