@@ -14,8 +14,9 @@ A Rapid Serial Visual Presentation script written in PHP using ncurses, for quic
 * Speed of text can be controlled either by command line or keyboard on the fly (keys **[** and **[**)
 * Rewind text (key **r**)
 * Change case of text to upper case or lower case (key **c**)
-* Start from position (word number n. *./readread.php --position <n>*)
+* Start from position (word number n. *--position <n>*)
 * Status bar text can be easily customizable.
+* Change ORP marker character (*--marker <char>*) from default '+'
 
 Being developed using Geany - running from Geany's embedded terminal
 
@@ -103,6 +104,9 @@ cat tea.txt | ./readread.php --words-per-minute 250
         
         -p,	--position <word no. #>
         Start reading from word number #.
+        
+        -m, --marker
+        Changes marker character from default '+'
 
         -h, --help
         Show help and exit

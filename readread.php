@@ -92,7 +92,8 @@ $shortopts .= "c"; // capitalize
 $shortopts .= "f:"; // open file instead of stdin
 $shortopts .= "p:"; // start from word num
 $shortopts .= "s"; // hide status bars
-$shortopts .= "h"; // hide status bars
+$shortopts .= "h"; // help
+$shortopts .= "m:"; // marker character
 
 $longopts  = array(
 	"words-per-minute:",
@@ -102,6 +103,7 @@ $longopts  = array(
 	"position:",
 	"status",
 	"help",
+	"marker",
 );
 
 $opts = getopt($shortopts, $longopts);
@@ -131,6 +133,10 @@ else { $starting_word = 0; }
 
 if(isset($opts['s']) || isset($opts['status'])) { $status = false; }
 else { $status = true; }
+
+if(isset($opts["m"])) { $opr_char = $opts["m"][0]; }
+else if(isset($opts["marker"])) { $opr_char = $opts["marker"][0]; }
+else { $opr_char = "+"; }
 
 $file = str_ireplace("\n"," ",$file);
 $file = str_ireplace("\r","",$file);
@@ -163,7 +169,6 @@ $middle = floor($col/2);
 $erase = str_repeat(" ", $col-2);
 
 $prog_char = "_";
-$opr_char = "+";
 $ref_tax = "50000";
 
 // orp marker
@@ -262,6 +267,9 @@ READREAD - quick reading
 
         -s, --status
         Hides status bar and progress bar
+        
+        -m, --marker
+        Changes marker character from default '+'
 		
     KEYBOARD SHORTCUTS
 	
