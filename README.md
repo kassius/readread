@@ -4,7 +4,7 @@ A Rapid Serial Visual Presentation PHP script, using ncurses, for quick reading.
 
 ![Terminator screenshot](screenshot-000.png)
 
-Being developed using Geany - runing from Geany's embedded terminal
+Being developed using Geany - running from Geany's embedded terminal
 
 ![Geany screenshot](screenshot-001.png)
 
