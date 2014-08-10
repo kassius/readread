@@ -9,7 +9,7 @@
 
 ## COMMAND LINE OPTIONS (getopt())
 
-- [ ] Set colors: BG, FG, Alert (default 'red')
+- [x] ~~Set colors: BG, FG, Alert (default 'red')~~ **choose between themes instead**
 - [ ] Allow only ORP to be capitalized
 - [ ] Change ORP marker character (default '+')
 - [ ] Do not show any bars, or show just some (silent, normal, extended, crazy)
@@ -20,7 +20,7 @@
 - [ ] Hide/show bars
 - [x] Rewind some words (key 'r')
 - [x] Pause/play
-- [ ] Toggle BG/FG/Marker pairs (Themes)
+- [x] Toggle BG/FG/Marker pairs (Themes)
 ## MISC
 
 - [x] Improve delay for some words (final dots, commas, small words etc)

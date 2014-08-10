@@ -68,14 +68,16 @@ cat tea.txt | ./readread.php --words-per-minute 250
 ```
 ## Options
 
+### Command line options
+
 ```
 	./readread.php
 
 		-w,	--words-per-minute	<number>
 		Number of words that it shows per minute, approx.
 
-		-b,	--opaque
-		If set, background will be opaque, and not show terminal transparency
+		-t,	--theme		<theme>
+		Use to choose the theme! current themes are: **default**, **light** and **opaque**.
 
 		-c,	--capitalize
 		Transform words to uppercase
@@ -84,3 +86,52 @@ cat tea.txt | ./readread.php --words-per-minute 250
 		Reads text from file, instead of from STDIN (standard input)
 
 ```
+
+### Keyboard shortcuts
+
+```
+	These are the keyboard shortcuts currently avaliable.
+
+	'[' and ']'
+		Change how many words per minute are running.
+
+	c
+		Toggle between upper case / lower case.
+
+	r
+		Rewind the text by ~ 10 words.
+
+	t
+		Change theme to the next avaliable.
+
+	p
+		Toggle between play / pause.
+
+	q
+		Quit.
+```
+
+## Example usage
+
+Make the file executable if it is not yet:
+
+```bash
+chmod +x readread.php # make sure file is executable
+```
+
+### Running the script directly
+
+    ./readread.php -f tea.txt
+
+or
+
+    ./readread.php --file tea.txt
+
+### Running via pipe
+
+    cat tea.txt | ./readread.php
+
+or
+
+    ./readread.php < tea.txt
+
