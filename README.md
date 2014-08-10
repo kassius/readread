@@ -2,25 +2,25 @@
 
 A Rapid Serial Visual Presentation PHP script, using ncurses, for quick reading.
 
-![Terminator screenshot](screenshot-000.png)
+![Terminator screenshot](screenshots/screenshot-000.png)
 
 Being developed using Geany - running from Geany's embedded terminal
 
-![Geany screenshot](screenshot-001.png)
+![Geany screenshot](screenshots/screenshot-001.png)
 
 ### Themes
 
 #### Theme 'default' - allow transparency
 
-![screenshot](screenshot-002.png)
+![screenshot](screenshots/screenshot-002.png)
 
 #### Theme 'light'
 
-![screenshot](screenshot-003.png)
+![screenshot](screenshots/screenshot-003.png)
 
 #### Theme 'opaque'
 
-![screenshot](screenshot-004.png)
+![screenshot](screenshots/screenshot-004.png)
 
 ## Installing depedencies on an Ubuntu 14.04:
 
