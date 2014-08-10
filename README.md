@@ -12,7 +12,7 @@ A Rapid Serial Visual Presentation script written in PHP using ncurses, for quic
 * Progress bar and progress count
 * Fits to terminal as it uses ncurses library
 * Speed of text can be controlled either by command line or keyboard on the fly (keys '**[**' and '**]**')
-* Rewind text (key '**r**')
+* Rewind  or forward text (key '**r**')
 * Change case of text to upper case or lower case (key '**c**')
 * Start from position (word number n. *--position [n]*)
 * Status bar text can be easily customizable.
@@ -124,6 +124,9 @@ cat tea.txt | ./readread.php --words-per-minute 250
 
 	r
 		Rewind the text by ~ 10 words.
+
+    f
+        Forward the text by ~ 10 words.
 
 	t
 		Change theme to the next avaliable.
