@@ -175,6 +175,7 @@ $ref_tax = "50000";
 ncurses_wcolor_set($screen,2);
 ncurses_mvwaddstr($screen, ($row / 2) -1 , $middle, $opr_char);
 
+// $start_time = time(); 8DDD
 for($i = $starting_word; isset( $words[$i] ); $i++)
 {
 	$string = ($capitalize) ? strtoupper(trim($words[$i])) : trim($words[$i]);
