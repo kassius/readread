@@ -3,7 +3,8 @@
 
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
 
-stream_set_blocking(STDIN, false);
+$keyboard = fopen("/dev/tty", "r");
+stream_set_blocking($keyboard, false);
 
 function getORP($strlen)
 {
@@ -36,21 +37,21 @@ function calc_delay($word, $len, $wpm)
 	else return 0;
 }
 
-function getch_nonblock($timeout)
+function getch_nonblock($keyboard)
 {
-	
-	//$input = fopen("php://stdin", "r");
-	//stream_set_blocking($input, false);
-	//fflush(STDIN);
-	$key = fgetc(STDIN);
-	//$key = ncurses_getch();
-	//fclose($input);
-	
+	$key = fgetc($keyboard);
 	return $key;
 }
 
-function myusleep($wpm, $delay)
+function myusleep($wpm, $delay, $keyboard)
 {
+	$tax = 10000;
+
+	for($i=0; ($i*$tax) < calc_microsecs($wpm, $delay); $i++)
+	{
+		usleep($tax);
+	}
+
 	usleep(calc_microsecs($wpm, $delay));
 }
 
@@ -96,8 +97,6 @@ if(isset($opts["f"]) && file_exists($opts["f"])) { $file = file_get_contents($op
 else if(isset($opts["file"]) && file_exists($opts["file"])) { $file = file_get_contents($opts["file"]); }
 else { $file = ""; while( $data = fgets(STDIN, 64000) ) { $file .= $data; } }
 
-//fclose(STDIN);
-
 $file = str_ireplace("\n"," ",$file);
 $file = str_ireplace("\r","",$file);
 while(strstr($file, "  ") !== FALSE) $file = str_ireplace("  "," ",$file); 
@@ -130,6 +129,7 @@ ncurses_wcolor_set($screen,2);
 ncurses_mvwaddstr($screen, ($row / 2) -1 , $middle, "+");
 
 $prog_char = "_";
+$ref_tax = "50000";
 
 for($i=0; isset( $words[$i] ); $i++)
 {
@@ -155,6 +155,7 @@ for($i=0; isset( $words[$i] ); $i++)
 	$progress = rhd(($i/$words_count)*($col-4));
 	$bar = str_repeat($prog_char, $progress);
 	ncurses_wcolor_set($screen,1);
+	ncurses_mvwaddstr($screen, $row-4, 1, $erase);
 	ncurses_mvwaddstr($screen, $row-4, 2, "{$bar}");
 
 	//$how_many_percent = rhd(($i / $words_count) * 100);
@@ -164,24 +165,32 @@ for($i=0; isset( $words[$i] ); $i++)
 	ncurses_mvwaddstr($screen, $row-2, $col-4, "{$last_key}");
 	
 	ncurses_wrefresh($screen);
-    
-	if($key = getch_nonblock(100))
-	{
-		if($key == NCURSES_KEY_F10) { ncurses_end(); exit(0); }
-		if($key == 'u' || $key ==NCURSES_KEY_RIGHT) { $last_key = "u"; $wpm = change_wpm($wpm, $key); }
-	}
-	else
-	{
-		$key = null;
-	}
-	ncurses_flushinp();
 
 	$delay = calc_delay($string, $length, $wpm);
-	myusleep($wpm, $delay, $wpm);
+	$time = calc_microsecs($wpm, $delay);
+
+	for($k=0; ($k*$ref_tax) < $time; $k++)
+	{
+		$delay = calc_delay($string, $length, $wpm);
+		$time = calc_microsecs($wpm, $delay);
+
+		if($key = getch_nonblock($keyboard))
+		{
+			if($key == NCURSES_KEY_F10) { ncurses_end(); exit(0); }
+			if($key == '[' || $key == ']') { $wpm = change_wpm($wpm, $key); }
+			if($key == 'r') { $i = ($i-11 < 0 ? 0 : $i-11); }
+		}
+		else
+		{
+			$key = null;
+		}
+		ncurses_flushinp();
+	 
+		usleep($ref_tax);
+	}
 }
 
-ncurses_wgetch($screen);
-
+fclose($keyboard);
 ncurses_end();
 
 ?>
